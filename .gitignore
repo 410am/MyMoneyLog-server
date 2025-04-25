@@ -35,3 +35,28 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# === Spring Boot ===
+*.log
+*.h2.db
+*.mv.db
+*.trace.db
+
+# === OS & Editor temp files ===
+.DS_Store
+Thumbs.db
+
+# === Env & Properties ===
+.env
+.env.*
+application-*.yml
+application-*.properties
+application.yml
+application.properties
+
+# === Test reports ===
+test-output/
+surefire-reports/
+
+# === Java Target ===
+target/
