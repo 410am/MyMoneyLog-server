@@ -17,6 +17,28 @@ spring:
   web:
     resources:
       add-mappings: false
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 2128899450-3jd5m6mf340f9leuht99kv8c02c7uh9f.apps.googleusercontent.com
+            client-secret: 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
+            redirect-uri: "http://localhost:8080/login/oauth2/code/google"
+
+            # redirect-uri: http://localhost:5173
+            scope:
+              - profile
+              - email
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+            user-name-attribute: sub
+jwt:
+  secret: slkfjeo389ghfdgdgf43857394587329fslfwjekflwekfj
+  expiration: 3600000 # 1시간 (ms)
 
 logging:
   level:
