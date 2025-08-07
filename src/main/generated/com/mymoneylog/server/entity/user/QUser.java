@@ -32,6 +32,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath password = createString("password");
 
+    public final StringPath providerId = createString("providerId");
+
     public final ListPath<com.mymoneylog.server.entity.record.Record, com.mymoneylog.server.entity.record.QRecord> records = this.<com.mymoneylog.server.entity.record.Record, com.mymoneylog.server.entity.record.QRecord>createList("records", com.mymoneylog.server.entity.record.Record.class, com.mymoneylog.server.entity.record.QRecord.class, PathInits.DIRECT2);
 
     public final NumberPath<Long> userId = createNumber("userId", Long.class);

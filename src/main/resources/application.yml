@@ -38,7 +38,8 @@ spring:
             user-name-attribute: sub
 jwt:
   secret: slkfjeo389ghfdgdgf43857394587329fslfwjekflwekfj
-  expiration: 3600000 # 1시간 (ms)
+  access-expiration: 3600000 # 1시간 (ms)
+  refresh-expiration: 604800000 # 1주 (ms)
 
 logging:
   level:

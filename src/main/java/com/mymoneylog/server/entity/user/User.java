@@ -31,6 +31,9 @@ public class User {
 
     private String nickname;
 
+    // private String provider;     // ex) google, kakao
+    private String providerId;   // ex) 구글의 sub
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
@@ -68,6 +71,12 @@ public class User {
         this.nickname = dto.getNickname();
         this.password = dto.getPassword();
     }
+
+
+      public void setSub(String sub) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setSub'");
+      }
 
 
 }
