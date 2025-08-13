@@ -1,6 +1,7 @@
 package com.mymoneylog.server.config;
 
 import java.util.Collections;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -37,7 +38,8 @@ public class SecurityConfig {
 @Bean
 public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOrigins(Collections.singletonList("http://localhost:5173"));
+    // configuration.setAllowedOrigins(Collections.singletonList(List.of("http://localhost:5173", "http://localhost:4173")));
+    configuration.setAllowedOriginPatterns(List.of("http://localhost:*"));
     configuration.setAllowedMethods(Collections.singletonList("*"));
     configuration.setAllowedHeaders(Collections.singletonList("*"));
     configuration.setAllowCredentials(true);
