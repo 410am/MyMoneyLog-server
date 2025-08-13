@@ -41,7 +41,7 @@ public class GoogleOAuthService {
                     });
 
             // 토큰 발급
-            String accessToken = jwtProvider.createToken(user.getEmail(), "ROLE_USER", 1000 * 60 * 15); // 15분
+            String accessToken = jwtProvider.createToken(user.getEmail(), "ROLE_USER", 1000 * 60); // 15분
             String refreshToken = jwtProvider.createToken(user.getEmail(), "ROLE_USER", 1000L * 60 * 60 * 24 * 7); // 7일
 
             // RefreshToken 쿠키로 전달
