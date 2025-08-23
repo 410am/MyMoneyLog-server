@@ -28,45 +28,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     @Value("${jwt.refresh-expiration}")
     private long refreshExpiration; 
 
-
-//     @Override
-//     public void onAuthenticationSuccess(HttpServletRequest request,
-//                                         HttpServletResponse response,
-//                                         Authentication authentication) throws IOException {
-//         // 🔹 1. 로그인한 사용자 정보 가져오기
-//         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
-
-
-//         // 예: 사용자 ID, 권한 정보를 클레임으로 추출
-//         String userId = oAuth2User.getAttribute("sub");      // 구글 고유 ID
-//         String role = "ROLE_USER";                           // 예시로 고정
-
-//         // JwtProvider를 사용해서 액세스토큰 생성
-//         String accessToken = jwtProvider.createToken(userId, role, accessExpiration);
-
-//         // JwtProvider를 사용해서 리프레시토큰 생성
-//         String refreshToken = jwtProvider.createToken(userId, role, refreshExpiration);
-
-//         // 🔸 RefreshToken을 HttpOnly 쿠키로 설정
-//         Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
-//         refreshCookie.setHttpOnly(true);
-//         refreshCookie.setSecure(true); // HTTPS 환경에서만
-//         refreshCookie.setPath("/");
-//         refreshCookie.setMaxAge((int) (refreshExpiration / 1000)); // 초 단위로 설정
-//         response.addCookie(refreshCookie);
-
-        
-//         // 🔸 AccessToken은 바디로 응답
-//         response.setContentType("application/json");
-//         response.setCharacterEncoding("UTF-8");
-//         response.getWriter().write("{\"accessToken\": \"" + accessToken + "\"}");
-
-
-//         response.getWriter().write("로그인 성공! 발급된 JWT: " + accessToken);
-//         response.getWriter().write("로그인 성공! 발급된 refreshJWT: " + refreshToken);
-//     }
-// }
-
 @Override
 public void onAuthenticationSuccess(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -94,9 +55,6 @@ public void onAuthenticationSuccess(HttpServletRequest request,
     response.setContentType("application/json");
     response.setCharacterEncoding("UTF-8");
 
-//     String json = String.format("{\"accessToken\": \"%s\"}", accessToken);
-//     response.getWriter().write(json);
-// }
 
 String json = "{\"accessToken\": \"" + accessToken + "\"}";
 response.getWriter().write(json);

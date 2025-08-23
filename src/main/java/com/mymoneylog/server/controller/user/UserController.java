@@ -27,21 +27,21 @@ public class UserController {
 
     // ✅ 유저 조회
     @GetMapping("/{userId}")
-    public ApiResponseEntity<UserResDTO> getUser(@PathVariable Long userId) {
+    public ApiResponseEntity<UserResDTO> getUser(@PathVariable("userId") Long userId) {
         UserResDTO user = UserResDTO.from(userService.findUserById(userId));
         return ApiResponseEntity.ok(CommonConstants.GLOBAL_SUCCESS_MSG, user);
     }
 
-    // ✅ 유저 수정
+    // ✅ 유저 수
     @PostMapping("/{userId}")
-    public ApiResponseEntity<UserResDTO> updateUser(@PathVariable Long userId, @RequestBody UserReqDTO userReqDto) {
+    public ApiResponseEntity<UserResDTO> updateUser(@PathVariable("userId") Long userId, @RequestBody UserReqDTO userReqDto) {
         UserResDTO updatedUser = userService.updateUser(userId, userReqDto);
         return ApiResponseEntity.ok(CommonConstants.GLOBAL_SUCCESS_MSG, updatedUser);
     }
 
     // ✅ 유저 삭제 
     @DeleteMapping("/{userId}")
-    public ApiResponseEntity<UserResDTO> deleteUser(@PathVariable Long userId) {
+    public ApiResponseEntity<UserResDTO> deleteUser(@PathVariable("userId") Long userId) {
         userService.deleteUserById(userId);
         return ApiResponseEntity.ok(CommonConstants.GLOBAL_SUCCESS_MSG, null);
     }

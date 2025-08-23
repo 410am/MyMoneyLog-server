@@ -38,21 +38,21 @@ public class CategoryController {
 
     // 카테고리 id로 카테고리 조회
     @GetMapping("/{categoryId}")
-    public ApiResponseEntity<?> getCategoryById(@PathVariable Long categoryId) {
+    public ApiResponseEntity<?> getCategoryById(@PathVariable("categoryId") Long categoryId) {
         CategoryResDTO category = categoryService.getCategoryById(categoryId);
         return ApiResponseEntity.ok(CommonConstants.GLOBAL_SUCCESS_MSG, category);
     }
 
     // userId로 카테고리 조회
     @GetMapping("/user/{userId}")
-    public ApiResponseEntity<?> getCategoriesByUserId(@PathVariable Long userId) {
+    public ApiResponseEntity<?> getCategoriesByUserId(@PathVariable("userId") Long userId) {
         List<CategoryResDTO> categories = categoryService.getCategoriesByUserId(userId);
         return ApiResponseEntity.ok(CommonConstants.GLOBAL_SUCCESS_MSG, categories);
     }
 
     // 카테고리 id로 카테고리+기록 조회
     @GetMapping("/{categoryId}/records")
-    public ApiResponseEntity<?> getCategoryAndRecordsById(@PathVariable Long categoryId) {
+    public ApiResponseEntity<?> getCategoryAndRecordsById(@PathVariable("categoryId") Long categoryId) {
         List<RecordResDTO> categoryAndRecords = categoryService.getCategoryAndRecordsById(categoryId);
         return ApiResponseEntity.ok(CommonConstants.GLOBAL_SUCCESS_MSG, categoryAndRecords);
     }
@@ -60,14 +60,14 @@ public class CategoryController {
 
     // 카테고리 수정
     @PostMapping("/{categoryId}")
-    public ApiResponseEntity<?> updateCategory(@PathVariable Long categoryId, @RequestBody @Valid CategoryReqDTO dto) {
+    public ApiResponseEntity<?> updateCategory(@PathVariable("categoryId") Long categoryId, @RequestBody @Valid CategoryReqDTO dto) {
         CategoryResDTO updatedCategory = categoryService.updateCategory(categoryId, dto);
         return ApiResponseEntity.ok(CommonConstants.GLOBAL_SUCCESS_MSG, updatedCategory);
     }
 
     // 카테고리 삭제
     @DeleteMapping("/{categoryId}")
-    public ApiResponseEntity<Void> deleteCategory(@PathVariable Long categoryId) {
+    public ApiResponseEntity<Void> deleteCategory(@PathVariable("categoryId") Long categoryId) {
         categoryService.deleteCategory(categoryId);
         return ApiResponseEntity.ok(CommonConstants.GLOBAL_SUCCESS_MSG, null);
     }

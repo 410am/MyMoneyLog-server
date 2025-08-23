@@ -16,6 +16,7 @@ public class RecordResDTO {
     private Long recordId;
     private Long userId;
     private Long categoryId;
+    private String categoryName;
     private IncomeExpenseType type;
     private Integer amount;
     private String memo;
@@ -28,6 +29,7 @@ public class RecordResDTO {
                 .recordId(record.getRecordId())
                 .userId(record.getUser().getUserId())
                 .categoryId(record.getCategory().getCategoryId())
+                .categoryName(record.getCategory().getName())
                 .type(record.getType())
                 .amount(record.getAmount())
                 .memo(record.getMemo())

@@ -3,6 +3,7 @@ package com.mymoneylog.server.repository.category;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.query.Param;
 
 import com.mymoneylog.server.entity.category.Category;
 import com.mymoneylog.server.entity.user.User;

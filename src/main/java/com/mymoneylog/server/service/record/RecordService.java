@@ -1,23 +1,29 @@
+
+
 package com.mymoneylog.server.service.record;
 
 import com.mymoneylog.server.dto.record.RecordReqDTO;
 import com.mymoneylog.server.dto.record.RecordResDTO;
 import com.mymoneylog.server.entity.category.Category;
-import com.mymoneylog.server.entity.record.QRecord;
 import com.mymoneylog.server.entity.record.Record;
 import com.mymoneylog.server.entity.user.User;
+import com.mymoneylog.server.enums.IncomeExpenseType;
 import com.mymoneylog.server.repository.category.CategoryRepository;
 import com.mymoneylog.server.repository.record.RecordRepository;
 import com.mymoneylog.server.repository.user.UserRepository;
-import com.mymoneylog.server.utils.CustomException;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,9 +36,7 @@ public class RecordService {
     private final RecordRepository recordRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
-    private final JPAQueryFactory queryFactory;
 
-    
     // 기록 생성
     public RecordResDTO createRecord(RecordReqDTO reqDTO) {
         User user = userRepository.findById(reqDTO.getUserId())
@@ -52,16 +56,13 @@ public class RecordService {
         return RecordResDTO.from(recordRepository.save(record));
     }
 
-    // 유저별 기록 조회
+    // 유저별 기록 조회 (legacy)
     @Transactional(readOnly = true)
     public List<RecordResDTO> getRecordsByUser(Long userId) {
         List<Record> records = recordRepository.findByUserUserId(userId);
 
-        int a = 1;
-
-        if (a == 1) {
-            log.warn("존재하지 않는 회원!!");
-            throw new CustomException("존재하지 않는 회원입니다.");
+        if (!userRepository.existsById(userId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 회원입니다: " + userId);
         }
 
         return records.stream()
@@ -69,34 +70,48 @@ public class RecordService {
                 .collect(Collectors.toList());
     }
 
-    // 단일 기록 조회(recordId)
+    // 단일 기록 조회
     @Transactional(readOnly = true)
     public RecordResDTO getRecordById(Long recordId) {
         Record record = recordRepository.findWithUserAndCategoryById(recordId)
                 .orElseThrow(() -> new IllegalArgumentException("기록을 찾을 수 없습니다."));
-
         return RecordResDTO.from(record);
     }
 
+    // ✅ 페이지 + 필터
+    @Transactional(readOnly = true)
+    public Page<RecordResDTO> findPageByUser(
+            Long userId,
+            Long categoryId,            // optional
+            IncomeExpenseType type,     // optional (INCOME/EXPENSE)
+            LocalDate from,             // optional (inclusive)
+            LocalDate toExclusive,      // optional (exclusive; to+1day)
+            Pageable pageable
+    ) {
+        // ⚠️ 엔티티 필드명이 user.userId / category.categoryId 라는 전제 (네 레포 시그니처 기준)
+        Specification<Record> spec = (root, q, cb) ->
+                cb.equal(root.get("user").get("userId"), userId);
 
-    // 내용별 기록 조회(카테고리, 내용)
-//     public List<Record> recordAndCategorySearch(Long userId, String keyword) {
+        if (categoryId != null) {
+            spec = spec.and((root, q, cb) ->
+                    cb.equal(root.get("category").get("categoryId"), categoryId));
+        }
+        if (type != null) {
+            spec = spec.and((root, q, cb) ->
+                    cb.equal(root.get("type"), type));
+        }
+        if (from != null) {
+            spec = spec.and((root, q, cb) ->
+                    cb.greaterThanOrEqualTo(root.get("date"), from));
+        }
+        if (toExclusive != null) {
+            spec = spec.and((root, q, cb) ->
+                    cb.lessThan(root.get("date"), toExclusive));
+        }
 
-//         QRecord record = QRecord.record;
-    
-//         return queryFactory
-//             .selectFrom(record)
-//             .where(
-//                 record.user.userId.eq(userId)
-//                     .and(
-//                         record.memo.containsIgnoreCase(keyword)
-//                         .or(record.category.name.containsIgnoreCase(keyword))
-//                     )
-//             )
-//             .fetch();
-//     }
-    
-
+        return recordRepository.findAll(spec, pageable)
+                .map(RecordResDTO::from);
+    }
 
     // 기록 수정
     public RecordResDTO updateRecord(Long recordId, RecordReqDTO reqDTO) {
