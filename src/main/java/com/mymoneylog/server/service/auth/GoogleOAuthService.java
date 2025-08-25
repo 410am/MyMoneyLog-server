@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -32,17 +33,21 @@ public class GoogleOAuthService {
             String email = payload.getEmail();
             String providerId = payload.getSubject();
 
+            
+
             // DB에 사용자 없으면 생성
             User user = userRepository.findByEmail(email)
                     .orElseGet(() -> {
                         User newUser = new User();
                         newUser.setEmail(email);
+                        newUser.setProviderId(providerId);
                         return userRepository.save(newUser);
                     });
 
+
             // 토큰 발급
-            String accessToken = jwtProvider.createToken(user.getEmail(), "ROLE_USER", 1000 * 60); // 15분
-            String refreshToken = jwtProvider.createToken(user.getEmail(), "ROLE_USER", 1000L * 60 * 60 * 24 * 7); // 7일
+            String accessToken = jwtProvider.createToken(String.valueOf(user.getUserId()), "ROLE_USER", 1000 * 60); // 15분
+            String refreshToken = jwtProvider.createToken(String.valueOf(user.getUserId()), "ROLE_USER", 1000L * 60 * 60 * 24 * 7); // 7일
 
             // RefreshToken 쿠키로 전달
             Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
@@ -52,10 +57,21 @@ public class GoogleOAuthService {
             refreshCookie.setMaxAge((int) (7 * 24 * 60 * 60));
             response.addCookie(refreshCookie);
 
-            return Map.of("jwt", accessToken);
+
+    
+    
+            Map<String, String> result = new HashMap<>();
+            result.put("jwt", accessToken);
+            result.put("email", user.getEmail());
+            System.out.println("✅ result map = " + result);
+    
+            return result;
+
 
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException("Google 로그인 처리 실패", e);
+            
         }
     }
 }
