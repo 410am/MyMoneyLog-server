@@ -14,7 +14,7 @@ public class CategoryResDTO {
 
     private Long categoryId;
 
-    private String name;
+    private String categoryName;
 
     private IncomeExpenseType type;
 
@@ -25,7 +25,7 @@ public class CategoryResDTO {
     public static CategoryResDTO from(Category category) {
         return CategoryResDTO.builder()
                 .categoryId(category.getCategoryId())
-                .name(category.getName())
+                .categoryName(category.getName())
                 .type(category.getType())
                 .isDefault(category.getIsDefault())
                 .userId(category.getUser().getUserId())
