@@ -17,7 +17,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import com.mymoneylog.security.CustomOAuth2UserService;
-import com.mymoneylog.security.OAuth2SuccessHandler;
+// import com.mymoneylog.security.OAuth2SuccessHandler;
 import com.mymoneylog.security.jwt.JwtProvider;
 import com.mymoneylog.server.repository.user.UserRepository;
 import com.mymoneylog.security.jwt.JwtAuthenticationFilter;
@@ -33,7 +33,8 @@ public class SecurityConfig {
 
     private final UserRepository userRepository;
 
-
+    @Value("${jwt.secret}")
+    private String jwtSecret;
 
 @Bean
 public CorsConfigurationSource corsConfigurationSource() {
@@ -61,13 +62,14 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
                     .requestMatchers("/user", "/user/**", "/ai-report", "/ai-report/**", "/category", "/category/**", "/record", "/record/**", "/login","/auth/**","/auth" ,"/login/**").permitAll()
                     .anyRequest().authenticated()
             )
-            .oauth2Login(oauth2 -> oauth2
-            .userInfoEndpoint(userInfo -> userInfo
-                .userService(customOAuth2UserService()) // 유저 정보 가져오는 서비스 지정
-            )
-            .successHandler(oAuth2SuccessHandler(jwtProvider()))
-            .defaultSuccessUrl("http://localhost:5173/login/success", true) // 리디렉트 위치 // 로그인 성공 시 실행할 핸들러 지정
-            );
+            .oauth2Login(oauth2 -> oauth2.disable()); 
+            // .oauth2Login(oauth2 -> oauth2
+            // .userInfoEndpoint(userInfo -> userInfo
+            //     .userService(customOAuth2UserService()) // 유저 정보 가져오는 서비스 지정
+            // )
+            // .successHandler(oAuth2SuccessHandler(jwtProvider()))
+            // .defaultSuccessUrl("http://localhost:5173/login/success", true) // 리디렉트 위치 // 로그인 성공 시 실행할 핸들러 지정
+            // );
             
     http.addFilterBefore(JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     
@@ -80,15 +82,15 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
         return new CustomOAuth2UserService(userRepository);
     }
 
-    // 로그인 성공 시 처리할 커스텀 핸들러 등록
-    @Bean
-    public OAuth2SuccessHandler oAuth2SuccessHandler(JwtProvider jwtProvider) {
-        return new OAuth2SuccessHandler(jwtProvider);
-    }
+    // // 로그인 성공 시 처리할 커스텀 핸들러 등록
+    // @Bean
+    // public OAuth2SuccessHandler oAuth2SuccessHandler(JwtProvider jwtProvider) {
+    //     return new OAuth2SuccessHandler(jwtProvider);
+    // }
 
     @Bean
     public JwtProvider jwtProvider() {
-        return new JwtProvider();
+        return new JwtProvider(jwtSecret);
     }
 
     @Bean
