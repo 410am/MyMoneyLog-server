@@ -96,6 +96,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                                         String path = request.getRequestURI();
 
+
     // refresh 요청은 accessToken 검사 스킵
     if ("/refresh".equals(path) || "/auth/refresh".equals(path) || path.startsWith("/auth/")) {
         filterChain.doFilter(request, response);
@@ -110,12 +111,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 var claims = jwtProvider.parseClaims(token); // validate 대신 Claims 리턴
                 String userId = claims.getSubject();
                 String role = claims.get("role", String.class);
-        
+
+                Long uId = Long.valueOf(userId); 
                 UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(userId, null,
+                    new UsernamePasswordAuthenticationToken(uId, null,
                         List.of(new SimpleGrantedAuthority(role)));
         
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                System.out.println("👉 JwtAuthenticationFilter 실행됨, userId = " + userId);
+               
+
             } catch (ExpiredJwtException e) {
                 System.out.println("❌ AccessToken 만료됨: " + e.getMessage());
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

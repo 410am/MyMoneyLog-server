@@ -62,7 +62,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
                     .requestMatchers("/user", "/user/**", "/ai-report", "/ai-report/**", "/category", "/category/**", "/record", "/record/**", "/login","/auth/**","/auth" ,"/login/**").permitAll()
                     .anyRequest().authenticated()
             )
-            .oauth2Login(oauth2 -> oauth2.disable()); 
+            .oauth2Login(oauth2 -> oauth2.disable());
             // .oauth2Login(oauth2 -> oauth2
             // .userInfoEndpoint(userInfo -> userInfo
             //     .userService(customOAuth2UserService()) // 유저 정보 가져오는 서비스 지정

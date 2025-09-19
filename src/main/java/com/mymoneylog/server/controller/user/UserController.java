@@ -6,6 +6,8 @@ import com.mymoneylog.server.service.user.UserService;
 import com.mymoneylog.server.utils.ApiResponseEntity;
 import com.mymoneylog.server.utils.CommonConstants;
 import jakarta.validation.Valid;
+
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,22 +28,23 @@ public class UserController {
     }
 
     // ✅ 유저 조회
-    @GetMapping("/{userId}")
-    public ApiResponseEntity<UserResDTO> getUser(@PathVariable("userId") Long userId) {
+    @GetMapping("/me")
+    public ApiResponseEntity<UserResDTO> getUser(@AuthenticationPrincipal Long userId) {
         UserResDTO user = UserResDTO.from(userService.findUserById(userId));
+        System.out.println("👉 Principal userId = " + userId);
         return ApiResponseEntity.ok(CommonConstants.GLOBAL_SUCCESS_MSG, user);
     }
 
-    // ✅ 유저 수
-    @PostMapping("/{userId}")
-    public ApiResponseEntity<UserResDTO> updateUser(@PathVariable("userId") Long userId, @RequestBody UserReqDTO userReqDto) {
+    // ✅ 유저 수정
+    @PostMapping("/me")
+    public ApiResponseEntity<UserResDTO> updateUser(@AuthenticationPrincipal Long userId, @RequestBody UserReqDTO userReqDto) {
         UserResDTO updatedUser = userService.updateUser(userId, userReqDto);
         return ApiResponseEntity.ok(CommonConstants.GLOBAL_SUCCESS_MSG, updatedUser);
     }
 
     // ✅ 유저 삭제 
-    @DeleteMapping("/{userId}")
-    public ApiResponseEntity<UserResDTO> deleteUser(@PathVariable("userId") Long userId) {
+    @DeleteMapping("/me")
+    public ApiResponseEntity<UserResDTO> deleteUser(@AuthenticationPrincipal Long userId) {
         userService.deleteUserById(userId);
         return ApiResponseEntity.ok(CommonConstants.GLOBAL_SUCCESS_MSG, null);
     }

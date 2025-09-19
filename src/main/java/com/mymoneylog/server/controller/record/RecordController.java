@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import com.mymoneylog.server.dto.record.RecordReqDTO;
@@ -34,9 +36,10 @@ public class RecordController {
     }
 
     // ✅ 프론트 호출과 동일: GET /record/user/{userId}?categoryId=&type=&from=&to=&sort=&page=&size=
-    @GetMapping("/user/{userId}")
+    @GetMapping("/user/me")
     public ApiResponseEntity<Page<RecordResDTO>> getRecordsByUser(
-            @PathVariable("userId") Long userId,
+            // @PathVariable("userId") Long userId,
+            @AuthenticationPrincipal Long userId,
             @RequestParam(name = "categoryId",required = false) Long categoryId,
             @RequestParam(name = "type",required = false) IncomeExpenseType type, // INCOME/EXPENSE
             @RequestParam(name = "from",required = false)
@@ -47,6 +50,7 @@ public class RecordController {
             @RequestParam(name = "page",defaultValue = "0") int page,
             @RequestParam(name = "size",defaultValue = "20") int size
     ) {
+
         // sort 문자열 → Sort 매핑
         Sort s = switch (sort) {
             case "date_asc"    -> Sort.by("date").ascending();
@@ -60,7 +64,7 @@ public class RecordController {
         LocalDate toExclusive = (to != null) ? to.plusDays(1) : null;
 
         Page<RecordResDTO> result = recordService.findPageByUser(
-                userId, categoryId, type, from, toExclusive, pageable
+            userId, categoryId, type, from, toExclusive, pageable
         );
         return ApiResponseEntity.ok(CommonConstants.GLOBAL_SUCCESS_MSG, result);
     }
