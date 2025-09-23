@@ -12,6 +12,7 @@ import lombok.*;
 public class UserResDTO {
 
     private Long userId;
+    private String picture;
     private String email;
     private String nickname;
 
@@ -19,6 +20,7 @@ public class UserResDTO {
     public static UserResDTO from(User user) {
         return UserResDTO.builder()
                 .userId(user.getUserId())
+                .picture(user.getPicture())
                 .email(user.getEmail())
                 .nickname(user.getNickname())
                 .build();

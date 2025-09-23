@@ -34,7 +34,7 @@ public class GoogleOAuthService {
     @Value("${jwt.refresh-expiration}")
     private Duration refreshExpiration;
 
-    public Map<String, String> handleGoogleOAuthLogin(String idToken, HttpServletResponse response) {
+    public Map<String, Object> handleGoogleOAuthLogin(String idToken, HttpServletResponse response) {
         try {
             GoogleIdToken token = verifier.verify(idToken);
             if (token == null) {
@@ -42,15 +42,18 @@ public class GoogleOAuthService {
             }
 
             GoogleIdToken.Payload payload = token.getPayload();
+            String name = (String)payload.get("name");
+            String picture = (String)payload.get("picture");
             String email = payload.getEmail();
             String providerId = payload.getSubject();
 
-            
 
             // DB에 사용자 없으면 생성
             User user = userRepository.findByEmail(email)
                     .orElseGet(() -> {
                         User newUser = new User();
+                        newUser.setNickname(name);
+                        newUser.setPicture(picture);
                         newUser.setEmail(email);
                         newUser.setProviderId(providerId);
                         return userRepository.save(newUser);
@@ -84,9 +87,12 @@ public class GoogleOAuthService {
                 response.addHeader("Set-Cookie", refreshCookie.toString());
     
             //결과 반환
-            Map<String, String> result = new HashMap<>();
+            Map<String, Object> result = new HashMap<>();
             result.put("jwt", accessToken);
             result.put("email", user.getEmail());
+            result.put("userId", user.getUserId());
+            result.put("nickname", user.getNickname());
+            result.put("picture", user.getPicture());
             System.out.println("✅ result map = " + result);
     
             return result;

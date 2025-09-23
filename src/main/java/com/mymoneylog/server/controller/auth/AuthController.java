@@ -34,7 +34,7 @@ public class AuthController {
         }
         String email = request.get("email");
 
-        Map<String, String> tokens = googleOAuthService.handleGoogleOAuthLogin(idToken, response);
+        Map<String, Object> tokens = googleOAuthService.handleGoogleOAuthLogin(idToken, response);
 
         Map<String, Object> body = new HashMap<>();
         body.put("data", tokens);

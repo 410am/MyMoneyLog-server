@@ -16,7 +16,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
-import com.mymoneylog.security.CustomOAuth2UserService;
+// import com.mymoneylog.security.CustomOAuth2UserService;
 // import com.mymoneylog.security.OAuth2SuccessHandler;
 import com.mymoneylog.security.jwt.JwtProvider;
 import com.mymoneylog.server.repository.user.UserRepository;
@@ -76,11 +76,11 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
     return http.build();
 }
 
-    // 유저 정보 처리를 담당할 커스텀 서비스 등록
-    @Bean
-    public CustomOAuth2UserService customOAuth2UserService() {
-        return new CustomOAuth2UserService(userRepository);
-    }
+    // // 유저 정보 처리를 담당할 커스텀 서비스 등록
+    // @Bean
+    // public CustomOAuth2UserService customOAuth2UserService() {
+    //     return new CustomOAuth2UserService(userRepository);
+    // }
 
     // // 로그인 성공 시 처리할 커스텀 핸들러 등록
     // @Bean
