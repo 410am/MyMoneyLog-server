@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -107,4 +108,19 @@ public ResponseEntity<?> refresh(@CookieValue("refreshToken") String refreshToke
         .body(Map.of("accessToken", newAccessToken));
 }
 
+
+@PostMapping("/logout")
+public ResponseEntity<?> logout(HttpServletResponse response) {
+    ResponseCookie cookie = ResponseCookie.from("refreshToken", "")
+            .httpOnly(true)
+            .secure(true)
+            .sameSite("None")
+            .path("/")
+            .maxAge(0) // 바로 만료
+            .build();
+
+    response.addHeader("Set-Cookie", cookie.toString());
+    return ResponseEntity.ok("로그아웃 완료");
 }
+}
+
