@@ -23,7 +23,7 @@ public class UserService {
     public UserResDTO createUser(UserReqDTO userReqDto) {
         User user = User.builder()
                 .email(userReqDto.getEmail())
-                .password(userReqDto.getPassword())
+                // .password(userReqDto.getPassword())
                 .nickname(userReqDto.getNickname())
                 .createdAt(LocalDateTime.now())
                 .build();

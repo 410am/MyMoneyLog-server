@@ -38,6 +38,8 @@ public class UserController {
     // ✅ 유저 수정
     @PostMapping("/me")
     public ApiResponseEntity<UserResDTO> updateUser(@AuthenticationPrincipal Long userId, @RequestBody UserReqDTO userReqDto) {
+        System.out.println("유저!!!!!!!!!!!!!!!!!!!");
+        System.out.println(userReqDto);
         UserResDTO updatedUser = userService.updateUser(userId, userReqDto);
         return ApiResponseEntity.ok(CommonConstants.GLOBAL_SUCCESS_MSG, updatedUser);
     }
