@@ -51,7 +51,10 @@ public class UserService {
 
 
     // ✅ 유저 삭제
-    public void deleteUserById(Long id) {
-        userRepository.deleteById(id);
+    @Transactional
+    public void deleteUser(Long userId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("유저 없음"));
+        userRepository.delete(user); 
     }
 }

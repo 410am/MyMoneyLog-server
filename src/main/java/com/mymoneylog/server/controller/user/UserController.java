@@ -38,8 +38,6 @@ public class UserController {
     // ✅ 유저 수정
     @PostMapping("/me")
     public ApiResponseEntity<UserResDTO> updateUser(@AuthenticationPrincipal Long userId, @RequestBody UserReqDTO userReqDto) {
-        System.out.println("유저!!!!!!!!!!!!!!!!!!!");
-        System.out.println(userReqDto);
         UserResDTO updatedUser = userService.updateUser(userId, userReqDto);
         return ApiResponseEntity.ok(CommonConstants.GLOBAL_SUCCESS_MSG, updatedUser);
     }
@@ -47,7 +45,7 @@ public class UserController {
     // ✅ 유저 삭제 
     @DeleteMapping("/me")
     public ApiResponseEntity<UserResDTO> deleteUser(@AuthenticationPrincipal Long userId) {
-        userService.deleteUserById(userId);
+        userService.deleteUser(userId);
         return ApiResponseEntity.ok(CommonConstants.GLOBAL_SUCCESS_MSG, null);
     }
 }
