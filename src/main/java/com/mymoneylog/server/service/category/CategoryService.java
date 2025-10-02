@@ -33,7 +33,7 @@ public class CategoryService {
                 .orElseThrow(() -> new RuntimeException("유저 없음"));
 
         Category category = Category.builder()
-                .name(dto.getName())
+                .name(dto.getCategoryName())
                 .type(dto.getType())
                 .isDefault(dto.isDefault())
                 .user(user)
@@ -67,7 +67,7 @@ public class CategoryService {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new IllegalArgumentException("카테고리를 찾을 수 없습니다."));
         
-        category.setName(dto.getName());
+        category.setName(dto.getCategoryName());
         category.setType(dto.getType());
         category.setIsDefault(dto.isDefault());
 

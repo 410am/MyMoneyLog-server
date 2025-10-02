@@ -16,7 +16,7 @@ public class CategoryReqDTO {
     private Long userId;
 
     @NotBlank(message = "카테고리 이름은 필수입니다.")
-    private String name;
+    private String categoryName;
 
     @NotNull(message = "카테고리 타입은 필수입니다.")
     private IncomeExpenseType type;
