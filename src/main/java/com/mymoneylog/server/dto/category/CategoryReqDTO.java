@@ -1,5 +1,6 @@
 package com.mymoneylog.server.dto.category;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.mymoneylog.server.enums.IncomeExpenseType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

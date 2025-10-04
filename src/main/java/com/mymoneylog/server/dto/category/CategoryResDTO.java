@@ -1,6 +1,7 @@
 package com.mymoneylog.server.dto.category;
 
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.mymoneylog.server.entity.category.Category;
 import com.mymoneylog.server.enums.IncomeExpenseType;
 import lombok.*;
