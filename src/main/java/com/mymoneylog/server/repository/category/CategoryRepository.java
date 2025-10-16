@@ -8,9 +8,10 @@ import org.springframework.data.repository.query.Param;
 import com.mymoneylog.server.entity.category.Category;
 import com.mymoneylog.server.entity.user.User;
 
+
+
 public interface CategoryRepository extends JpaRepository<Category, Long> {
-
-    List<Category> findByUserUserId(Long userId);
-
+    List<Category> findByUser_UserId(Long userId);
+    boolean existsByUser_UserId(Long userId);
 
 }

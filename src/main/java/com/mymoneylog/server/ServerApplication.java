@@ -2,8 +2,10 @@ package com.mymoneylog.server;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 @SpringBootApplication
+@EntityScan(basePackages = "com.mymoneylog.server.entity")
 public class ServerApplication {
     // 해놓은거 valid 처리, 공통 응답처리, jpa, querydsl
 

@@ -46,8 +46,15 @@ public class Category {
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
-    
-} }
+} 
+
+public Category(User user, String name, IncomeExpenseType type, boolean isDefault) {
+    this.user = user;
+    this.name = name;
+    this.type = type;
+    this.isDefault = isDefault;
+}
+}
 
 
 //     @Enumerated(EnumType.STRING)

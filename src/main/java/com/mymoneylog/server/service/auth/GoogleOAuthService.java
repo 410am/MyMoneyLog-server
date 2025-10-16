@@ -3,6 +3,7 @@ package com.mymoneylog.server.service.auth;
 import com.mymoneylog.security.jwt.JwtProvider;
 import com.mymoneylog.server.entity.user.User;
 import com.mymoneylog.server.repository.user.UserRepository;
+import com.mymoneylog.server.service.category.CategoryService;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +27,7 @@ public class GoogleOAuthService {
     private final JwtProvider jwtProvider;
     private final UserRepository userRepository;
     private final GoogleIdTokenVerifier verifier;
+    private final CategoryService categoryService;
 
 
     @Value("${jwt.access-expiration}")
@@ -46,7 +48,7 @@ public class GoogleOAuthService {
             String picture = (String)payload.get("picture");
             String email = payload.getEmail();
             String providerId = payload.getSubject();
-
+            
 
             // DB에 사용자 없으면 생성
             User user = userRepository.findByEmail(email)
@@ -85,6 +87,9 @@ public class GoogleOAuthService {
                         .build();
     
                 response.addHeader("Set-Cookie", refreshCookie.toString());
+
+                categoryService.initializeDefaultsIfEmpty(user.getUserId());
+
     
             //결과 반환
             Map<String, Object> result = new HashMap<>();

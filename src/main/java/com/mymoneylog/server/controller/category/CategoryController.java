@@ -20,6 +20,7 @@ import com.mymoneylog.server.service.category.CategoryService;
 import com.mymoneylog.server.utils.ApiResponseEntity;
 import com.mymoneylog.server.utils.CommonConstants;
 
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -45,11 +46,21 @@ public class CategoryController {
     }
 
     // userId로 카테고리 조회
+    // @GetMapping("/user/me")
+    // public ApiResponseEntity<?> getCategoriesByUserId(@AuthenticationPrincipal Long userId) {
+    //     List<CategoryResDTO> categories = categoryService.getCategoriesByUserId(userId);
+    //     return ApiResponseEntity.ok(CommonConstants.GLOBAL_SUCCESS_MSG, categories);
+    // }
+
     @GetMapping("/user/me")
-    public ApiResponseEntity<?> getCategoriesByUserId(@AuthenticationPrincipal Long userId) {
-        List<CategoryResDTO> categories = categoryService.getCategoriesByUserId(userId);
-        return ApiResponseEntity.ok(CommonConstants.GLOBAL_SUCCESS_MSG, categories);
-    }
+public ApiResponseEntity<?> getCategoriesByUserId(
+        @AuthenticationPrincipal Long userId) {
+
+    // ✅ 필터에서 AuthenticationPrincipal로 userId가 그대로 들어옴
+    var categories = categoryService.getCategoriesByUserId(userId);
+    return ApiResponseEntity.ok(CommonConstants.GLOBAL_SUCCESS_MSG, categories);
+}
+    
 
     // 카테고리 id로 카테고리+기록 조회
     @GetMapping("/{categoryId}/records")

@@ -10,9 +10,9 @@ import com.mymoneylog.server.dto.category.CategoryReqDTO;
 import com.mymoneylog.server.dto.category.CategoryResDTO;
 import com.mymoneylog.server.dto.record.RecordResDTO;
 import com.mymoneylog.server.entity.category.Category;
-import com.mymoneylog.server.entity.record.Record;
 import com.mymoneylog.server.entity.user.User;
 import com.mymoneylog.server.repository.category.CategoryRepository;
+import com.mymoneylog.server.repository.category.DefaultCategoryRepository;
 import com.mymoneylog.server.repository.record.RecordRepository;
 import com.mymoneylog.server.repository.user.UserRepository;
 
@@ -23,22 +23,45 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class CategoryService {
 
+    private final DefaultCategoryRepository defaultCategoryRepository;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     private final RecordRepository recordRepository;
+
+
+    @Transactional
+    public void initializeDefaultsIfEmpty(Long userId) {
+        if (categoryRepository.existsByUser_UserId(userId)) return;
+
+        var defaults = defaultCategoryRepository.findAll();
+
+        User user = userRepository.findById(userId)
+        .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        var categories = defaults.stream()
+                .map(d -> new Category(
+                        user,
+                        d.getName(),
+                        d.getType(),
+                        true  
+                ))
+                .toList();
+
+        categoryRepository.saveAll(categories);
+    }
 
     // 카테고리 생성
     public CategoryResDTO createCategory(CategoryReqDTO dto) {
         User user = userRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new RuntimeException("유저 없음"));
 
-        Category category = Category.builder()
+                Category category = Category.builder()
                 .name(dto.getCategoryName())
                 .type(dto.getType())
                 .isDefault(dto.isDefault())
                 .user(user)
                 .build();
-
+        
         return CategoryResDTO.from(categoryRepository.save(category));
     }
 
@@ -55,7 +78,8 @@ public class CategoryService {
     // userId로 카테고리 조회
     @Transactional(readOnly = true)
     public List<CategoryResDTO> getCategoriesByUserId(Long userId) {
-        List<Category> categories = categoryRepository.findByUserUserId(userId);
+        List<Category> categories = categoryRepository.findByUser_UserId(userId);
+        System.out.println("✅ [DB에서 찾은 카테고리 개수] " + categories.size());
         return categories.stream()
         .map(CategoryResDTO::from)
         .collect(Collectors.toList());

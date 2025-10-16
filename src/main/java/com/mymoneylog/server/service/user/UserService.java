@@ -57,4 +57,10 @@ public class UserService {
             .orElseThrow(() -> new RuntimeException("유저 없음"));
         userRepository.delete(user); 
     }
+
+    public Long findIdByProviderId(String sub) {
+        return userRepository.findByProviderId(sub)
+                .map(User::getUserId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found for providerId: " + sub));
+    }
 }

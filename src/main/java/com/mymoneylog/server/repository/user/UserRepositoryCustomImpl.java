@@ -12,6 +12,8 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class UserRepositoryCustomImpl implements UserRepositoryCustom {
 
+    
+
     private final JPAQueryFactory queryFactory;
     QUser user = QUser.user;
 

@@ -13,6 +13,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUserId(Long userId);
 
     // 구글 sub로 유저 찾기
-    Optional<User> findByProviderId(String sub);
+    Optional<User> findByProviderId(String providerId);
+
+
     
 }
