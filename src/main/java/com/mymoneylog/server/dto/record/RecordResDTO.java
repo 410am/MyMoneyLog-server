@@ -34,7 +34,6 @@ public class RecordResDTO {
                 .amount(record.getAmount())
                 .memo(record.getMemo())
                 .date(record.getDate())
-                .createdAt(record.getCreatedAt())
                 .build();   
     }
 

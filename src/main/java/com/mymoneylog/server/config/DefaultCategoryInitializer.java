@@ -41,6 +41,34 @@ public class DefaultCategoryInitializer implements CommandLineRunner {
                     .name("보너스")
                     .type(IncomeExpenseType.INCOME)
                     .build());
+                    defaultCategoryRepository.save(DefaultCategory.builder()
+                    .name("배달")
+                    .type(IncomeExpenseType.EXPENSE)
+                    .build());
+                    defaultCategoryRepository.save(DefaultCategory.builder()
+                    .name("카페/디저트")
+                    .type(IncomeExpenseType.EXPENSE)
+                    .build());
+                    defaultCategoryRepository.save(DefaultCategory.builder()
+                    .name("쇼핑")
+                    .type(IncomeExpenseType.EXPENSE)
+                    .build());
+                    defaultCategoryRepository.save(DefaultCategory.builder()
+                    .name("주거/관리비")
+                    .type(IncomeExpenseType.EXPENSE)
+                    .build());
+                    defaultCategoryRepository.save(DefaultCategory.builder()
+                    .name("통신비")
+                    .type(IncomeExpenseType.EXPENSE)
+                    .build());
+                    defaultCategoryRepository.save(DefaultCategory.builder()
+                    .name("의료/건강")
+                    .type(IncomeExpenseType.EXPENSE)
+                    .build());
+                    defaultCategoryRepository.save(DefaultCategory.builder()
+                    .name("문화생활")
+                    .type(IncomeExpenseType.EXPENSE)
+                    .build());
             
             System.out.println("✅ 기본 카테고리 자동 초기화 완료!");
         } else {

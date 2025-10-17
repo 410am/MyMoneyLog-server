@@ -39,6 +39,9 @@ public class RecordService {
 
     // 기록 생성
     public RecordResDTO createRecord(RecordReqDTO reqDTO) {
+
+
+
         User user = userRepository.findById(reqDTO.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
         Category category = categoryRepository.findById(reqDTO.getCategoryId())

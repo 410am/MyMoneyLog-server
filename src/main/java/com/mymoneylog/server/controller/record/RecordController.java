@@ -8,7 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +31,7 @@ public class RecordController {
     @PostMapping
     public ApiResponseEntity<RecordResDTO> createRecord(@RequestBody RecordReqDTO reqDTO) {
         RecordResDTO response = recordService.createRecord(reqDTO);
+        System.out.println("🎯 받은 DTO: " + reqDTO);
         return ApiResponseEntity.ok(CommonConstants.GLOBAL_SUCCESS_MSG, response);
     }
 
@@ -53,10 +53,10 @@ public class RecordController {
 
         // sort 문자열 → Sort 매핑
         Sort s = switch (sort) {
-            case "date_asc"    -> Sort.by("date").ascending();
-            case "amount_desc" -> Sort.by("amount").descending();
-            case "amount_asc"  -> Sort.by("amount").ascending();
-            default            -> Sort.by("date").descending(); // date_desc
+            case "date_asc"    -> Sort.by(Sort.Order.asc("date"), Sort.Order.asc("recordId"));
+            case "amount_desc" -> Sort.by(Sort.Order.desc("amount"), Sort.Order.desc("recordId"));
+            case "amount_asc"  -> Sort.by(Sort.Order.asc("amount"), Sort.Order.asc("recordId"));
+            default            -> Sort.by(Sort.Order.desc("date"), Sort.Order.desc("recordId"));
         };
         Pageable pageable = PageRequest.of(page, size, s);
 
