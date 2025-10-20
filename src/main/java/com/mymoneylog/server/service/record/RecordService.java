@@ -86,6 +86,7 @@ public class RecordService {
     public Page<RecordResDTO> findPageByUser(
             Long userId,
             Long categoryId,            // optional
+            String search,
             IncomeExpenseType type,     // optional (INCOME/EXPENSE)
             LocalDate from,             // optional (inclusive)
             LocalDate toExclusive,      // optional (exclusive; to+1day)
@@ -111,6 +112,10 @@ public class RecordService {
             spec = spec.and((root, q, cb) ->
                     cb.lessThan(root.get("date"), toExclusive));
         }
+        if (search != null && !search.isBlank()) {
+                spec = spec.and((root, q, cb) ->
+                        cb.like(root.get("memo"), "%" + search + "%"));
+            }
 
         return recordRepository.findAll(spec, pageable)
                 .map(RecordResDTO::from);

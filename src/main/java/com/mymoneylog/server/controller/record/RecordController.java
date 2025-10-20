@@ -48,7 +48,8 @@ public class RecordController {
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to,
             @RequestParam(name = "sort",defaultValue = "date_desc") String sort,
             @RequestParam(name = "page",defaultValue = "0") int page,
-            @RequestParam(name = "size",defaultValue = "20") int size
+            @RequestParam(name = "size",defaultValue = "20") int size,
+            @RequestParam(name = "search", defaultValue = "") String search
     ) {
 
         // sort 문자열 → Sort 매핑
@@ -64,7 +65,7 @@ public class RecordController {
         LocalDate toExclusive = (to != null) ? to.plusDays(1) : null;
 
         Page<RecordResDTO> result = recordService.findPageByUser(
-            userId, categoryId, type, from, toExclusive, pageable
+            userId, categoryId,search, type, from, toExclusive, pageable
         );
         return ApiResponseEntity.ok(CommonConstants.GLOBAL_SUCCESS_MSG, result);
     }
