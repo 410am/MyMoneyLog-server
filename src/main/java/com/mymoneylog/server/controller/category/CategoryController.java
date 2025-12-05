@@ -14,9 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mymoneylog.server.dto.category.CategoryReqDTO;
 import com.mymoneylog.server.dto.category.CategoryResDTO;
+import com.mymoneylog.server.dto.dashboard.DashboardResDTO;
 import com.mymoneylog.server.dto.record.RecordResDTO;
-import com.mymoneylog.server.entity.category.Category;
 import com.mymoneylog.server.service.category.CategoryService;
+import com.mymoneylog.server.service.dashboard.DashboardService;
 import com.mymoneylog.server.utils.ApiResponseEntity;
 import com.mymoneylog.server.utils.CommonConstants;
 
@@ -83,5 +84,6 @@ public ApiResponseEntity<?> getCategoriesByUserId(
         categoryService.deleteCategory(categoryId);
         return ApiResponseEntity.ok(CommonConstants.GLOBAL_SUCCESS_MSG, null);
     }
+
 }
 

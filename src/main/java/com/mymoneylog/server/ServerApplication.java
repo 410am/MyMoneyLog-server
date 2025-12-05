@@ -1,8 +1,12 @@
 package com.mymoneylog.server;
 
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 @SpringBootApplication
 @EntityScan(basePackages = "com.mymoneylog.server.entity")
@@ -18,6 +22,18 @@ public class ServerApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(ServerApplication.class, args);
+    }
+
+    @Bean
+    public CommandLineRunner printMappings(ApplicationContext ctx) {
+        return args -> {
+            System.out.println("========== MAPPINGS START ==========");
+            RequestMappingHandlerMapping mapping = ctx.getBean(RequestMappingHandlerMapping.class);
+            mapping.getHandlerMethods().forEach((info, method) -> {
+                System.out.println(info + " -> " + method);
+            });
+            System.out.println("=========== MAPPINGS END ===========");
+        };
     }
 
 }
