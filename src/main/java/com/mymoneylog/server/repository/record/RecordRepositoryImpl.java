@@ -16,7 +16,6 @@ import com.mymoneylog.server.entity.user.QUser;
 import com.mymoneylog.server.enums.IncomeExpenseType;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
-import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.mymoneylog.server.entity.record.Record;
 
@@ -45,46 +44,41 @@ public class RecordRepositoryImpl implements RecordRepositoryCustom {
 
     @Override
     public SummaryDto findMonthlySummary(Long userId, LocalDate start, LocalDate end) {
-        NumberExpression<Long> totalIncomeExpr = new CaseBuilder()
-                .when(r.type.eq(IncomeExpenseType.INCOME))
-                .then(r.amount.longValue())
-                .otherwise(0L)
-                .sum()
-                .coalesce(0L);
-
-        NumberExpression<Long> totalExpenseExpr = new CaseBuilder()
-                .when(r.type.eq(IncomeExpenseType.EXPENSE))
-                .then(r.amount.longValue())
-                .otherwise(0L)
-                .sum()
-                .coalesce(0L);
-
-        NumberExpression<Long> incomeCountExpr = new CaseBuilder()
-                .when(r.type.eq(IncomeExpenseType.INCOME))
-                .then(1L)
-                .otherwise(0L)
-                .sum()
-                .coalesce(0L);
-
-        NumberExpression<Long> expenseCountExpr = new CaseBuilder()
-                .when(r.type.eq(IncomeExpenseType.EXPENSE))
-                .then(1L)
-                .otherwise(0L)
-                .sum()
-                .coalesce(0L);
-
         return queryFactory
                 .select(
                         Projections.constructor(
                                 SummaryDto.class,
-                                // 🔹 총 수입
-                                totalIncomeExpr,
-                                // 🔹 총 지출
-                                totalExpenseExpr,
-                                // 🔹 수입 건수
-                                incomeCountExpr,
-                                // 🔹 지출 건수
-                                expenseCountExpr
+                         // 🔹 총 수입: type = INCOME 일 때만 amount 합계
+                         new CaseBuilder()
+                         .when(r.type.eq(IncomeExpenseType.INCOME))
+                         .then(r.amount.longValue())
+                         .otherwise(0L)
+                         .sum()
+                         .coalesce(0L),
+
+                 // 🔹 총 지출: type = EXPENSE 일 때만 amount 합계
+                 new CaseBuilder()
+                         .when(r.type.eq(IncomeExpenseType.EXPENSE))
+                         .then(r.amount.longValue())
+                         .otherwise(0L)
+                         .sum()
+                         .coalesce(0L),
+
+                 // 🔹 수입 건수: INCOME 이면 1, 아니면 0 → 전부 더함
+                 new CaseBuilder()
+                         .when(r.type.eq(IncomeExpenseType.INCOME))
+                         .then(1L)
+                         .otherwise(0L)
+                         .sum()
+                         .coalesce(0L),
+
+                 // 🔹 지출 건수: EXPENSE 이면 1, 아니면 0 → 전부 더함
+                 new CaseBuilder()
+                         .when(r.type.eq(IncomeExpenseType.EXPENSE))
+                         .then(1L)
+                         .otherwise(0L)
+                         .sum()
+                         .coalesce(0L)
                         )
                 )
                 .from(r)

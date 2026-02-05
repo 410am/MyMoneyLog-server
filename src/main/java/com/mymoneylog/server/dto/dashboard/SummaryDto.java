@@ -14,6 +14,8 @@ public class SummaryDto {
     private Long incomeCount;        // 수입 건수 
     private Long expenseCount;       // 지출 건수 
 
+    
+
     public Long getBalance() {       
         return totalIncome - totalExpense;
     }

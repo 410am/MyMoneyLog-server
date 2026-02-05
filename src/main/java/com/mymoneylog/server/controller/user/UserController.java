@@ -7,8 +7,10 @@ import com.mymoneylog.server.utils.ApiResponseEntity;
 import com.mymoneylog.server.utils.CommonConstants;
 import jakarta.validation.Valid;
 
+import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/user")
@@ -36,11 +38,19 @@ public class UserController {
     }
 
     // ✅ 유저 수정
-    @PostMapping("/me")
-    public ApiResponseEntity<UserResDTO> updateUser(@AuthenticationPrincipal Long userId, @RequestBody UserReqDTO userReqDto) {
-        UserResDTO updatedUser = userService.updateUser(userId, userReqDto);
+    @PostMapping(value="/me", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ApiResponseEntity<UserResDTO> updateUser(
+        @AuthenticationPrincipal Long userId,
+        @RequestPart("nickname") String nickname,
+        @RequestPart(value="pictureFile", required=false) MultipartFile pictureFile
+    ) {
+        System.out.println("여기사진!!!!!!!!!!!!!!!!!!!!");
+        System.out.println(pictureFile);
+        
+        UserResDTO updatedUser = userService.updateUser(userId, nickname, pictureFile);
         return ApiResponseEntity.ok(CommonConstants.GLOBAL_SUCCESS_MSG, updatedUser);
     }
+    
 
     // ✅ 유저 삭제 
     @DeleteMapping("/me")

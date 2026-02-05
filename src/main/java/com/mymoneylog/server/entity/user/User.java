@@ -68,10 +68,10 @@ public class User {
 
 
       // 상태 변경 메서드
-      public void update(UserReqDTO dto) {
+      public void update(String nickname) {
         // this.email = dto.getEmail();
-        this.nickname = dto.getNickname();
-        this.picture = dto.getPicture();
+        this.nickname = nickname;
+        // this.picture = dto.getPicture();
         // this.password = dto.getPassword();
     }
 

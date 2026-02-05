@@ -1,4 +1,12 @@
 spring:
+  tomcat:
+    max-swallow-size: -1
+    max-http-form-post-size: -1
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: -1
+      max-request-size: -1
   application:
     name: "@project.name@"
   profiles:
