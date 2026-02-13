@@ -15,6 +15,8 @@
 package com.mymoneylog.server.repository.record;
 
 import com.mymoneylog.server.entity.record.Record;
+
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -24,6 +26,13 @@ public interface RecordRepository extends
         JpaRepository<Record, Long>,
         JpaSpecificationExecutor<Record>,
         RecordRepositoryCustom {
+
+            List<Record> findByUser_UserIdAndDateGreaterThanEqualAndDateLessThan(
+                Long userId,
+                LocalDate start,
+                LocalDate end
+
+            );
 
     List<Record> findByUserUserId(Long userId);
     List<Record> findByCategoryCategoryId(Long categoryId);
