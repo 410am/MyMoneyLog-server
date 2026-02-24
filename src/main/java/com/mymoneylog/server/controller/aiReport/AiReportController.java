@@ -2,10 +2,12 @@ package com.mymoneylog.server.controller.aiReport;
 
 
 import com.mymoneylog.server.service.aiReport.AiReportService;
+import com.mymoneylog.server.dto.aiReport.AiMonthlyReportResponse;
 import com.mymoneylog.server.dto.aiReport.MonthlySummaryResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,6 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class AiReportController {
 
     private final AiReportService aiReportService;
+
+    @PostMapping("/current")
+public AiMonthlyReportResponse generateCurrentMonthReport(
+        @AuthenticationPrincipal Object principal
+) {
+    Long userId = extractUserId(principal);
+    return aiReportService.generateCurrentMonthReport(userId);
+}
 
     @GetMapping("/current/summary")
     public MonthlySummaryResponse getCurrentMonthSummary(

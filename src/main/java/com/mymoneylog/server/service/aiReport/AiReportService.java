@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.mymoneylog.server.entity.record.Record;
 import com.mymoneylog.server.enums.IncomeExpenseType;
+import com.mymoneylog.server.dto.aiReport.AiMonthlyReportResponse;
 import com.mymoneylog.server.dto.aiReport.CategoryStat;
 import com.mymoneylog.server.dto.aiReport.MonthlySummaryResponse;
 import com.mymoneylog.server.repository.record.RecordRepository;
+import com.mymoneylog.server.service.aiReport.llm.AiClient;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -26,6 +28,15 @@ public class AiReportService {
     private static final long SMALL_PAYMENT_THRESHOLD = 50_000L;
 
     private final RecordRepository recordRepository;
+
+ 
+private final AiClient aiClient;
+
+// 메서드 추가
+public AiMonthlyReportResponse generateCurrentMonthReport(Long userId) {
+    MonthlySummaryResponse summary = getCurrentMonthSummary(userId);
+    return aiClient.generateMonthlyReport(summary);
+}
 
     public MonthlySummaryResponse getCurrentMonthSummary(Long userId) {
         YearMonth ym = YearMonth.now(KST);
