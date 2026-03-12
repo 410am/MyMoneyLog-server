@@ -28,6 +28,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-batch'        // 필요 없으면 제거해도 됨
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    implementation("com.openai:openai-java:4.26.0")
 
     // --- DB Driver (하나만) ---
     runtimeOnly 'com.mysql:mysql-connector-j'
